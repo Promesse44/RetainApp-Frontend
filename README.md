@@ -2,6 +2,11 @@
 
 React + TypeScript + Vite frontend for Retain.
 
+## Deployment
+
+The Backend is deployed on Render.
+https://retain-app-frontend-virid.vercel.app/
+
 ## Local development
 
 ```powershell
