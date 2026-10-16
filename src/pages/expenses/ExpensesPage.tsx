@@ -6,16 +6,13 @@ import {
   setDateFrom, setDateTo, setSortBy, setOrder,
   setPage, resetFilters,
 } from '../../store/slices/filtersSlice'
+import { formatCurrency } from '../../utils/currency.js'
 import type { Expense, Category, PaymentMethod } from '../../types'
 
 const PAYMENT_METHODS: PaymentMethod[] = ['CASH', 'CREDIT_CARD', 'DEBIT_CARD', 'MOBILE_MONEY', 'BANK_TRANSFER', 'OTHER']
 const PM_LABEL: Record<string, string> = {
   CASH: 'Cash', CREDIT_CARD: 'Credit Card', DEBIT_CARD: 'Debit Card',
   MOBILE_MONEY: 'Mobile Money', BANK_TRANSFER: 'Bank Transfer', OTHER: 'Other',
-}
-
-function fmt(n: number) {
-  return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 }
 
 // ── Modal ────────────────────────────────────────────────────────────────────
@@ -251,7 +248,7 @@ export function ExpensesPage() {
                   <td className="px-5 py-3 text-zinc-500">{e.category.name}</td>
                   <td className="px-5 py-3 text-zinc-500 hidden sm:table-cell">{PM_LABEL[e.paymentMethod]}</td>
                   <td className="px-5 py-3 text-zinc-500 hidden md:table-cell">{new Date(e.date).toLocaleDateString()}</td>
-                  <td className="px-5 py-3 text-right font-semibold text-zinc-900">${fmt(e.amount)}</td>
+                  <td className="px-5 py-3 text-right font-semibold text-zinc-900">{formatCurrency(e.amount)}</td>
                   <td className="px-5 py-3">
                     <div className="flex items-center gap-2 justify-end">
                       <button onClick={() => { setEditing(e); setModalOpen(true) }}

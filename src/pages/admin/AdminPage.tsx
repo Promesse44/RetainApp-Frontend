@@ -1,13 +1,10 @@
 import { useEffect, useState } from 'react'
 import { adminApi, categoryApi } from '../../api'
+import { formatCurrency } from '../../utils/currency.js'
 import type { AdminInsights, Category } from '../../types'
 
 type InsightExpense = AdminInsights['recentExpenses'][number] & {
 	user: { id: string; name: string; email: string }
-}
-
-function fmt(n: number) {
-	return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 }
 
 function dateLabel(value: string) {
@@ -201,7 +198,7 @@ export function AdminPage() {
 						<StatCard label="Registered users" value={String(insights.totalUsers)} />
 						<StatCard label="Expenses recorded" value={String(insights.totalExpenses)} />
 						<StatCard label="Expenses this month" value={String(insights.monthExpensesCount)} />
-						<StatCard label="Total value" value={`$${fmt(insights.totalValue)}`} />
+						<StatCard label="Total value" value={formatCurrency(insights.totalValue)} />
 					</div>
 
 					<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -217,7 +214,7 @@ export function AdminPage() {
 											<div key={category}>
 												<div className="flex items-center justify-between text-sm mb-1">
 													<span className="text-zinc-700">{category}</span>
-													<span className="text-zinc-500">${fmt(amount)}</span>
+													<span className="text-zinc-500">{formatCurrency(amount)}</span>
 												</div>
 												<div className="h-1.5 rounded-full bg-zinc-100 overflow-hidden">
 													<div className="h-full rounded-full bg-emerald-500" style={{ width: `${(amount / topValue) * 100}%` }} />
@@ -252,7 +249,7 @@ export function AdminPage() {
 													{expense.category.name} · {(expense as InsightExpense).user.name} · {dateLabel(expense.createdAt)}
 												</p>
 											</div>
-											<span className="text-sm font-semibold text-zinc-900 shrink-0">${fmt(expense.amount)}</span>
+											<span className="text-sm font-semibold text-zinc-900 shrink-0">{formatCurrency(expense.amount)}</span>
 										</div>
 									))}
 								</div>

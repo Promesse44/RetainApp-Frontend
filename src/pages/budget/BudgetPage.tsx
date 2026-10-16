@@ -1,10 +1,7 @@
 import { useEffect, useState } from 'react'
 import { budgetApi, expenseApi } from '../../api'
+import { formatCurrency } from '../../utils/currency.js'
 import type { Budget, Dashboard } from '../../types'
-
-function fmt(n: number) {
-  return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-}
 
 function monthLabel(m: string) {
   const [y, mo] = m.split('-')
@@ -104,8 +101,8 @@ export function BudgetPage() {
         {/* Progress */}
         <div>
           <div className="flex justify-between text-xs text-zinc-500 mb-1.5">
-            <span>${fmt(totalSpent)} spent</span>
-            <span>{hasBudget ? `$${fmt(budgetAmount)} budget` : 'No budget'}</span>
+            <span>{formatCurrency(totalSpent)} spent</span>
+            <span>{hasBudget ? `${formatCurrency(budgetAmount)} budget` : 'No budget'}</span>
           </div>
           <div className="h-2.5 bg-zinc-100 rounded-full overflow-hidden">
             <div
@@ -116,8 +113,8 @@ export function BudgetPage() {
           {hasBudget && (
             <p className="text-xs text-zinc-400 mt-1.5">
               {remaining >= 0
-                ? `$${fmt(remaining)} remaining`
-                : `$${fmt(Math.abs(remaining))} over budget`}
+                ? `${formatCurrency(remaining)} remaining`
+                : `${formatCurrency(Math.abs(remaining))} over budget`}
             </p>
           )}
         </div>
@@ -125,7 +122,7 @@ export function BudgetPage() {
         {/* Set budget form */}
         <form onSubmit={handleSave} className="flex gap-3 pt-1">
           <div className="relative flex-1">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 text-sm">$</span>
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 text-sm">RWF</span>
             <input
               type="number"
               min="1"
@@ -133,7 +130,7 @@ export function BudgetPage() {
               value={input}
               onChange={e => setInput(e.target.value)}
               placeholder="Set monthly budget"
-              className="w-full pl-7 pr-4 py-2.5 border border-zinc-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              className="w-full pl-[3.3rem] pr-4 py-2.5 border border-zinc-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
             />
           </div>
           <button
@@ -156,7 +153,7 @@ export function BudgetPage() {
             {history.map(b => (
               <div key={b.id ?? b.month} className="flex items-center justify-between px-5 py-3">
                 <span className="text-sm text-zinc-700">{monthLabel(b.month)}</span>
-                <span className="text-sm font-semibold text-zinc-900">${fmt(b.amount)}</span>
+                <span className="text-sm font-semibold text-zinc-900">{formatCurrency(b.amount)}</span>
               </div>
             ))}
           </div>

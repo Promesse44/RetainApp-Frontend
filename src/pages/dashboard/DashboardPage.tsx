@@ -2,11 +2,8 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { expenseApi } from '../../api'
 import { useAuth } from '../../context/AuthContext'
+import { formatCurrency } from '../../utils/currency.js'
 import type { Dashboard } from '../../types'
-
-function fmt(n: number) {
-  return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-}
 
 function monthLabel(m: string) {
   const [y, mo] = m.split('-')
@@ -70,11 +67,11 @@ export function DashboardPage() {
 
       {/* Summary cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <StatCard label="Spent this month" value={`$${fmt(data.totalSpent)}`} />
+        <StatCard label="Spent this month" value={formatCurrency(data.totalSpent)} />
         <StatCard
           label="Budget"
-          value={data.budgetAmount > 0 ? `$${fmt(data.budgetAmount)}` : '—'}
-          sub={data.budgetAmount > 0 ? `$${fmt(Math.abs(data.remaining))} ${data.remaining >= 0 ? 'remaining' : 'over'}` : undefined}
+          value={data.budgetAmount > 0 ? formatCurrency(data.budgetAmount) : '—'}
+          sub={data.budgetAmount > 0 ? `${formatCurrency(Math.abs(data.remaining))} ${data.remaining >= 0 ? 'remaining' : 'over'}` : undefined}
         />
         <StatCard
           label="Status"
@@ -87,8 +84,8 @@ export function DashboardPage() {
       {data.budgetAmount > 0 && (
         <div>
           <div className="flex justify-between text-xs text-zinc-500 mb-1.5">
-            <span>${fmt(data.totalSpent)} spent</span>
-            <span>${fmt(data.budgetAmount)} budget</span>
+            <span>{formatCurrency(data.totalSpent)} spent</span>
+            <span>{formatCurrency(data.budgetAmount)} budget</span>
           </div>
           <div className="h-2 bg-zinc-100 rounded-full overflow-hidden">
             <div
@@ -115,7 +112,7 @@ export function DashboardPage() {
                 <div key={name}>
                   <div className="flex justify-between text-sm mb-1">
                     <span className="text-zinc-700">{name}</span>
-                    <span className="text-zinc-500">${fmt(amount)}</span>
+                    <span className="text-zinc-500">{formatCurrency(amount)}</span>
                   </div>
                   <div className="h-1.5 bg-zinc-100 rounded-full overflow-hidden">
                     <div
@@ -145,7 +142,7 @@ export function DashboardPage() {
                     <p className="text-sm text-zinc-800 truncate">{e.title}</p>
                     <p className="text-xs text-zinc-400">{e.category.name} · {new Date(e.date).toLocaleDateString()}</p>
                   </div>
-                  <span className="text-sm font-medium text-zinc-900 ml-4 shrink-0">${fmt(e.amount)}</span>
+                  <span className="text-sm font-medium text-zinc-900 ml-4 shrink-0">{formatCurrency(e.amount)}</span>
                 </div>
               ))}
             </div>
@@ -161,7 +158,7 @@ export function DashboardPage() {
             <p className="text-sm font-semibold text-zinc-900">{data.highestExpense.title}</p>
             <p className="text-xs text-zinc-400">{data.highestExpense.category.name} · {new Date(data.highestExpense.date).toLocaleDateString()}</p>
           </div>
-          <span className="text-xl font-bold text-zinc-900">${fmt(data.highestExpense.amount)}</span>
+          <span className="text-xl font-bold text-zinc-900">{formatCurrency(data.highestExpense.amount)}</span>
         </div>
       )}
     </div>
