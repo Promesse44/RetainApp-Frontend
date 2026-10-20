@@ -1,7 +1,15 @@
 import axios from 'axios'
 
+function normalizeApiBaseUrl(raw?: string) {
+  if (!raw || !raw.trim()) return '/api'
+  const trimmed = raw.trim().replace(/\/+$/, '')
+  return trimmed.endsWith('/api') ? trimmed : `${trimmed}/api`
+}
+
+const apiBaseUrl = normalizeApiBaseUrl(import.meta.env.VITE_API_URL)
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || '/api',
+  baseURL: apiBaseUrl,
 })
 
 api.interceptors.request.use((config) => {
@@ -19,7 +27,7 @@ api.interceptors.response.use(
       const refreshToken = localStorage.getItem('refreshToken')
       if (refreshToken) {
         try {
-          const { data } = await axios.post('/api/auth/refresh', { refreshToken })
+          const { data } = await axios.post(`${apiBaseUrl}/auth/refresh`, { refreshToken })
           localStorage.setItem('accessToken', data.accessToken)
           original.headers.Authorization = `Bearer ${data.accessToken}`
           return api(original)
